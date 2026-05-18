@@ -7,6 +7,7 @@ import ActionLink from '@/components/shared/ActionLink'
 import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
 import useTheme from '@/utils/hooks/useTheme'
 import type { OnSignUp } from './SignUpForm'
+import Link from 'next/link'
 
 type SignUpProps = {
     signInUrl?: string
@@ -21,12 +22,14 @@ export const SignUp = ({ onSignUp, signInUrl = '/sign-in' }: SignUpProps) => {
     return (
         <>
             <div className="mb-8">
-                <Logo
-                    type="pocket"
-                    mode={mode}
-                    logoWidth={60}
-                    logoHeight={60}
-                />
+                <Link href="/">
+                    <Logo
+                        type="pocket"
+                        mode={mode}
+                        logoWidth={60}
+                        logoHeight={60}
+                    />
+                </Link>
             </div>
             <div className="mb-8">
                 <h3 className="mb-1">Sign Up</h3>

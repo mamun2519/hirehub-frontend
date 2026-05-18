@@ -1,11 +1,13 @@
 export type AppConfig = {
+    serverBaseUrl: string
     apiPrefix: string
     authenticatedEntryPath: string
     unAuthenticatedEntryPath: string
 }
 
 const appConfig: AppConfig = {
-    apiPrefix: '/api',
+    serverBaseUrl: 'http://localhost:5000',
+    apiPrefix: '/api/v1',
     authenticatedEntryPath: '/portal',
     unAuthenticatedEntryPath: '/sign-in',
 }

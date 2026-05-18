@@ -9,6 +9,7 @@ import useTimeOutMessage from '@/utils/hooks/useTimeOutMessage'
 import useTheme from '@/utils/hooks/useTheme'
 import type { OnSignIn } from './SignInForm'
 import type { OnOauthSignIn } from './OauthSignIn'
+import Link from 'next/link'
 
 type SignInProps = {
     signUpUrl?: string
@@ -30,12 +31,14 @@ const SignIn = ({
     return (
         <>
             <div className="mb-8">
-                <Logo
-                    type="pocket"
-                    mode={mode}
-                    logoWidth={60}
-                    logoHeight={60}
-                />
+                <Link href="/">
+                    <Logo
+                        type="pocket"
+                        mode={mode}
+                        logoWidth={60}
+                        logoHeight={60}
+                    />
+                </Link>
             </div>
             <div className="mb-10">
                 <h2 className="mb-2">Welcome back!</h2>
