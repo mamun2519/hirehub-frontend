@@ -8,7 +8,7 @@
   }
   
   .header-action {
-    @apply flex items-center gap-2;
+    @apply flex items-center gap-2 gap-x-3;
   }
   
   .header-action-item {
