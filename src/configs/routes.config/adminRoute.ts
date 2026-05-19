@@ -10,8 +10,8 @@ const adminRoute: Routes = {
             pageContainerType: 'contained',
         },
     },
-    '/portal/users/new': {
-        key: 'admin.users.create',
+    '/portal/users/modify': {
+        key: 'admin.users.modify',
         authority: [ADMIN],
         meta: {
             pageBackgroundType: 'plain',

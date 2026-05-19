@@ -66,7 +66,6 @@ const SignUpForm = (props: SignUpFormProps) => {
         setSubmitting(true)
         setMessage('')
 
-        // Map userName to name to match the server's registration validation schema requirements
         const payload = {
             name: values.userName,
             email: values.email,

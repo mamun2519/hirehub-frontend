@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useMemo } from 'react'
 import Link from 'next/link'
 import { Card, Button, Badge, Tabs, Input, Select } from '@/components/ui'
+import { RECRUITER, CANDIDATE } from '@/constants/roles.constant'
 import {
     PiPlusBold,
     PiMagnifyingGlassDuotone,
@@ -14,60 +15,155 @@ import {
     PiBriefcaseDuotone,
 } from 'react-icons/pi'
 import DataTable, { ColumnDef } from '@/components/shared/DataTable'
-import {
-    mockRecruiters,
-    mockCandidates,
-    MockRecruiter,
-    MockCandidate,
-} from './_mockData/mockUsers'
+import ApiService from '@/services/ApiService'
+import debounce from 'lodash/debounce'
+
+export interface Recruiter {
+    id: string
+    name: string // Company name
+    website: string
+    email: string
+    location: string
+    status: 'Active' | 'Suspended'
+    createdAt: string
+}
+
+export interface Candidate {
+    id: string
+    name: string
+    email: string
+    role: string
+    phone: string
+    status: 'Active' | 'Suspended' | 'Pending'
+    createdAt: string
+}
 
 const { TabList, TabNav, TabContent } = Tabs
 
 export default function UserManagementPage() {
-    const [activeTab, setActiveTab] = useState<string>('recruiter')
+    const [activeTab, setActiveTab] = useState<string>(RECRUITER)
     const [loading, setLoading] = useState<boolean>(true)
     const [searchText, setSearchText] = useState<string>('')
+    const [debouncedSearchText, setDebouncedSearchText] = useState<string>('')
     const [selectedStatus, setSelectedStatus] = useState<string>('all')
+    const [recruiters, setRecruiters] = useState<Recruiter[]>([])
+    const [candidates, setCandidates] = useState<Candidate[]>([])
 
-    // Simulate database loading when switching tabs or filters
+    const [pageIndex, setPageIndex] = useState<number>(1)
+    const [pageSize, setPageSize] = useState<number>(10)
+    const [total, setTotal] = useState<number>(0)
+
+    const handleDebounceSearch = useMemo(
+        () =>
+            debounce((val: string) => {
+                setDebouncedSearchText(val)
+            }, 500),
+        [],
+    )
+
     useEffect(() => {
+        return () => {
+            handleDebounceSearch.cancel()
+        }
+    }, [handleDebounceSearch])
+
+    const fetchUsers = async () => {
         setLoading(true)
-        const timer = setTimeout(() => {
+        try {
+            const response = await ApiService.fetchDataWithAxios<{
+                success: boolean
+                data: {
+                    meta: { page: number; limit: number; total: number }
+                    data: any[]
+                }
+            }>({
+                url: '/users/',
+                method: 'get',
+                params: {
+                    role: activeTab,
+                    search: debouncedSearchText || undefined,
+                    page: pageIndex,
+                    limit: pageSize,
+                },
+            })
+            if (
+                response.success &&
+                response.data &&
+                Array.isArray(response.data.data)
+            ) {
+                const usersList = response.data.data
+                setTotal(response.data.meta.total)
+
+                if (activeTab === RECRUITER) {
+                    const recruitersData = usersList.map((user) => {
+                        const profile = user.recruiterProfile || {}
+                        return {
+                            id: user.id.slice(0, 8).toUpperCase(),
+                            name: profile.name || 'N/A',
+                            website: profile.website || '',
+                            email: user.email,
+                            location: profile.location || 'N/A',
+                            status: 'Active' as const,
+                            createdAt: new Date(
+                                user.createdAt,
+                            ).toLocaleDateString(),
+                        }
+                    })
+                    setRecruiters(recruitersData)
+                } else if (activeTab === CANDIDATE) {
+                    const candidatesData = usersList.map((user) => {
+                        const profile = user.candidateProfile || {}
+                        return {
+                            id: user.id.slice(0, 8).toUpperCase(),
+                            name: profile.fullName || 'N/A',
+                            email: user.email,
+                            role:
+                                profile.skills && profile.skills.length > 0
+                                    ? profile.skills.join(', ')
+                                    : 'Candidate',
+                            phone: profile.phoneNumber || 'N/A',
+                            status: 'Active' as const,
+                            createdAt: new Date(
+                                user.createdAt,
+                            ).toLocaleDateString(),
+                        }
+                    })
+                    setCandidates(candidatesData)
+                }
+            }
+        } catch (error) {
+            console.error('Error fetching users:', error)
+        } finally {
             setLoading(false)
-        }, 800)
-        return () => clearTimeout(timer)
-    }, [activeTab, searchText, selectedStatus])
+        }
+    }
+
+    useEffect(() => {
+        fetchUsers()
+    }, [activeTab, debouncedSearchText, pageIndex, pageSize])
 
     // Filter Recruiters
     const filteredRecruiters = useMemo(() => {
-        return mockRecruiters.filter((rec) => {
-            const matchesSearch =
-                rec.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                rec.email.toLowerCase().includes(searchText.toLowerCase()) ||
-                rec.location.toLowerCase().includes(searchText.toLowerCase())
+        return recruiters.filter((rec) => {
             const matchesStatus =
                 selectedStatus === 'all' ||
                 rec.status.toLowerCase() === selectedStatus.toLowerCase()
-            return matchesSearch && matchesStatus
+            return matchesStatus
         })
-    }, [searchText, selectedStatus])
+    }, [recruiters, selectedStatus])
 
     // Filter Candidates
     const filteredCandidates = useMemo(() => {
-        return mockCandidates.filter((cand) => {
-            const matchesSearch =
-                cand.name.toLowerCase().includes(searchText.toLowerCase()) ||
-                cand.email.toLowerCase().includes(searchText.toLowerCase()) ||
-                cand.role.toLowerCase().includes(searchText.toLowerCase())
+        return candidates.filter((cand) => {
             const matchesStatus =
                 selectedStatus === 'all' ||
                 cand.status.toLowerCase() === selectedStatus.toLowerCase()
-            return matchesSearch && matchesStatus
+            return matchesStatus
         })
-    }, [searchText, selectedStatus])
+    }, [candidates, selectedStatus])
 
     // Recruiter Columns
-    const recruiterColumns: ColumnDef<MockRecruiter>[] = useMemo(
+    const recruiterColumns: ColumnDef<Recruiter>[] = useMemo(
         () => [
             {
                 header: 'ID',
@@ -144,11 +240,11 @@ export default function UserManagementPage() {
                 ),
             },
         ],
-        []
+        [],
     )
 
     // Candidate Columns
-    const candidateColumns: ColumnDef<MockCandidate>[] = useMemo(
+    const candidateColumns: ColumnDef<Candidate>[] = useMemo(
         () => [
             {
                 header: 'ID',
@@ -174,16 +270,6 @@ export default function UserManagementPage() {
                 ),
             },
             {
-                header: 'Specialization / Role',
-                accessorKey: 'role',
-                cell: (props) => (
-                    <span className="text-xs text-gray-700 dark:text-gray-300 flex items-center gap-1 font-medium">
-                        <PiBriefcaseDuotone className="text-gray-400" />
-                        {props.row.original.role}
-                    </span>
-                ),
-            },
-            {
                 header: 'Phone',
                 accessorKey: 'phone',
                 cell: (props) => (
@@ -205,8 +291,8 @@ export default function UserManagementPage() {
                                 status === 'Active'
                                     ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
                                     : status === 'Pending'
-                                    ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
-                                    : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300'
+                                      ? 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                                      : 'bg-red-100 text-red-800 dark:bg-red-950/40 dark:text-red-300'
                             }
                         />
                     )
@@ -222,14 +308,16 @@ export default function UserManagementPage() {
                 ),
             },
         ],
-        []
+        [],
     )
 
     const statusOptions = [
         { value: 'all', label: 'All Status' },
         { value: 'active', label: 'Active' },
         { value: 'suspended', label: 'Suspended' },
-        ...(activeTab === 'candidate' ? [{ value: 'pending', label: 'Pending' }] : []),
+        ...(activeTab === CANDIDATE
+            ? [{ value: 'pending', label: 'Pending' }]
+            : []),
     ]
 
     return (
@@ -244,7 +332,10 @@ export default function UserManagementPage() {
                             User Management
                         </h1>
                         <p className="text-gray-300 max-w-xl text-sm leading-relaxed">
-                            Oversee all registered recruiter profiles and candidate applications. Review their active status, locations, contact credentials, and operational properties.
+                            Oversee all registered recruiter profiles and
+                            candidate applications. Review their active status,
+                            locations, contact credentials, and operational
+                            properties.
                         </p>
                     </div>
                 </div>
@@ -260,18 +351,21 @@ export default function UserManagementPage() {
                             onChange={(val) => {
                                 setActiveTab(val as string)
                                 setSearchText('')
+                                handleDebounceSearch.cancel()
+                                setDebouncedSearchText('')
+                                setPageIndex(1)
                                 setSelectedStatus('all')
                             }}
                             variant="underline"
                         >
                             <TabList>
-                                <TabNav value="recruiter">Recruiters</TabNav>
-                                <TabNav value="candidate">Candidates</TabNav>
+                                <TabNav value={RECRUITER}>Recruiters</TabNav>
+                                <TabNav value={CANDIDATE}>Candidates</TabNav>
                             </TabList>
                         </Tabs>
 
-                        {activeTab === 'recruiter' && (
-                            <Link href="/portal/users/new">
+                        {activeTab === RECRUITER && (
+                            <Link href="/portal/users/modify">
                                 <Button
                                     variant="solid"
                                     className="flex items-center gap-2"
@@ -288,9 +382,16 @@ export default function UserManagementPage() {
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                         <Input
                             placeholder="Search by name, email, location..."
-                            prefix={<PiMagnifyingGlassDuotone className="text-lg text-gray-400" />}
+                            prefix={
+                                <PiMagnifyingGlassDuotone className="text-lg text-gray-400" />
+                            }
                             value={searchText}
-                            onChange={(e) => setSearchText(e.target.value)}
+                            onChange={(e) => {
+                                const val = e.target.value
+                                setSearchText(val)
+                                setPageIndex(1)
+                                handleDebounceSearch(val)
+                            }}
                             size="sm"
                         />
                         <div style={{ maxWidth: 200 }}>
@@ -299,8 +400,12 @@ export default function UserManagementPage() {
                                 placeholder="Filter by Status"
                                 isSearchable={false}
                                 options={statusOptions}
-                                value={statusOptions.find((opt) => opt.value === selectedStatus)}
-                                onChange={(opt) => setSelectedStatus(opt?.value || 'all')}
+                                value={statusOptions.find(
+                                    (opt) => opt.value === selectedStatus,
+                                )}
+                                onChange={(opt) =>
+                                    setSelectedStatus(opt?.value || 'all')
+                                }
                             />
                         </div>
                     </div>
@@ -308,29 +413,39 @@ export default function UserManagementPage() {
                     {/* Dynamic Table listing */}
                     <div className="mt-2">
                         <Tabs value={activeTab}>
-                            <TabContent value="recruiter">
+                            <TabContent value={RECRUITER}>
                                 <DataTable
                                     columns={recruiterColumns}
                                     data={filteredRecruiters}
                                     loading={loading}
                                     noData={filteredRecruiters.length === 0}
                                     pagingData={{
-                                        total: filteredRecruiters.length,
-                                        pageIndex: 1,
-                                        pageSize: 10,
+                                        total,
+                                        pageIndex,
+                                        pageSize,
+                                    }}
+                                    onPaginationChange={(page) => setPageIndex(page)}
+                                    onSelectChange={(size) => {
+                                        setPageSize(size)
+                                        setPageIndex(1)
                                     }}
                                 />
                             </TabContent>
-                            <TabContent value="candidate">
+                            <TabContent value={CANDIDATE}>
                                 <DataTable
                                     columns={candidateColumns}
                                     data={filteredCandidates}
                                     loading={loading}
                                     noData={filteredCandidates.length === 0}
                                     pagingData={{
-                                        total: filteredCandidates.length,
-                                        pageIndex: 1,
-                                        pageSize: 10,
+                                        total,
+                                        pageIndex,
+                                        pageSize,
+                                    }}
+                                    onPaginationChange={(page) => setPageIndex(page)}
+                                    onSelectChange={(size) => {
+                                        setPageSize(size)
+                                        setPageIndex(1)
                                     }}
                                 />
                             </TabContent>

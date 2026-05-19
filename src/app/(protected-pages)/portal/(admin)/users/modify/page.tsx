@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { Card, Button, Input, FormItem, Form } from '@/components/ui'
+import { Card, Button, Input, FormItem, Form, Alert } from '@/components/ui'
 import Notification from '@/components/ui/Notification'
 import toast from '@/components/ui/toast'
 import { useForm, Controller } from 'react-hook-form'
@@ -10,6 +10,9 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { PiArrowLeftBold, PiBriefcaseDuotone } from 'react-icons/pi'
 import Link from 'next/link'
+import ApiService from '@/services/ApiService'
+import parseErrorMessage from '@/utils/parseErrorMessage'
+import { RECRUITER } from '@/constants/roles.constant'
 
 type RecruiterFormSchema = {
     name: string
@@ -36,7 +39,7 @@ const validationSchema = z.object({
                     return false
                 }
             },
-            { message: 'Please enter a valid URL (e.g. company.com)' }
+            { message: 'Please enter a valid URL (e.g. company.com)' },
         ),
     email: z.string().email({ message: 'Please enter a valid email address' }),
     location: z.string().min(1, { message: 'Please enter company location' }),
@@ -44,7 +47,8 @@ const validationSchema = z.object({
 
 export default function CreateRecruiterPage() {
     const router = useRouter()
-    const [isSubmitting, setIsSubmitting] = useState<boolean>(false)
+    const [isSubmitting, setSubmitting] = useState<boolean>(false)
+    const [message, setMessage] = useState('')
 
     const {
         handleSubmit,
@@ -61,31 +65,42 @@ export default function CreateRecruiterPage() {
     })
 
     const onSubmit = async (values: RecruiterFormSchema) => {
-        setIsSubmitting(true)
+        setSubmitting(true)
+        setMessage('')
 
         // Normalize website prefix for consistency
         const normalizedWebsite =
-            values.website.startsWith('http://') || values.website.startsWith('https://')
+            values.website.startsWith('http://') ||
+            values.website.startsWith('https://')
                 ? values.website
                 : `https://${values.website}`
 
-        // Simulate API call
-        setTimeout(() => {
-            setIsSubmitting(false)
+        const payload = {
+            name: values.name,
+            email: values.email,
+            website: normalizedWebsite,
+            location: values.location,
+            role: RECRUITER,
+            password: '123456789',
+        }
 
-            // Show success toast
+        try {
+            await ApiService.fetchDataWithAxios({
+                url: '/users/create',
+                method: 'post',
+                data: payload,
+            })
             toast.push(
-                <Notification title="Success" type="success">
-                    Recruiter profile for {values.name} was successfully created!
+                <Notification title="Account created!" type="success">
+                    Recruiter account created successfully!
                 </Notification>,
-                {
-                    placement: 'top-center',
-                }
             )
-
-            // Redirect back to user management list page
             router.push('/portal/users')
-        }, 1200)
+        } catch (error: any) {
+            setMessage(parseErrorMessage(error))
+        } finally {
+            setSubmitting(false)
+        }
     }
 
     return (
@@ -103,7 +118,8 @@ export default function CreateRecruiterPage() {
                         Create Recruiter Account
                     </h1>
                     <p className="text-xs text-gray-400">
-                        Create a premium recruiter profile and company identity on HireHub.
+                        Create a premium recruiter profile and company identity
+                        on HireHub.
                     </p>
                 </div>
             </div>
@@ -112,6 +128,11 @@ export default function CreateRecruiterPage() {
             <Card className="border border-gray-100 dark:border-gray-800 shadow-sm mt-2">
                 <Form onSubmit={handleSubmit(onSubmit)}>
                     <div className="flex flex-col gap-4">
+                        {message && (
+                            <Alert type="danger" showIcon closable onClose={() => setMessage('')}>
+                                {message}
+                            </Alert>
+                        )}
                         {/* Company Name */}
                         <FormItem
                             label="Company Name"
@@ -202,7 +223,9 @@ export default function CreateRecruiterPage() {
                                 size="sm"
                                 loading={isSubmitting}
                             >
-                                {isSubmitting ? 'Creating...' : 'Create Recruiter'}
+                                {isSubmitting
+                                    ? 'Creating...'
+                                    : 'Create Recruiter'}
                             </Button>
                         </div>
                     </div>
