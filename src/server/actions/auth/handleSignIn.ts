@@ -19,9 +19,10 @@ export const onSignInWithCredentials = async (
         if (error instanceof AuthError) {
             /** Customize error message based on AuthError */
             // eslint-disable-next-line @typescript-eslint/no-explicit-any
-            switch ((error.type as any).type) {
+            switch (error.type) {
                 case 'CredentialsSignin':
-                    return { error: 'Invalid credentials!' }
+                case 'CallbackRouteError':
+                    return { error: 'Invalid credentials! Please check your email and password.' }
                 default:
                     return { error: 'Something went wrong!' }
             }
