@@ -5,6 +5,13 @@ import {
     PiBookBookmarkDuotone,
     PiAcornDuotone,
     PiBagSimpleDuotone,
+    PiMagnifyingGlassDuotone,
+    PiUserDuotone,
+    PiGearDuotone,
+    PiPlusCircleDuotone,
+    PiBriefcaseDuotone,
+    PiFileTextDuotone,
+    PiUsersDuotone,
 } from 'react-icons/pi'
 import type { JSX } from 'react'
 
@@ -17,6 +24,16 @@ const navigationIcon: NavigationIcons = {
     groupSingleMenu: <PiBookOpenUserDuotone />,
     groupCollapseMenu: <PiBookBookmarkDuotone />,
     groupMenu: <PiBagSimpleDuotone />,
+    // Role-specific navigation icons
+    findJobs: <PiMagnifyingGlassDuotone />,
+    appliedJobs: <PiBookBookmarkDuotone />,
+    profile: <PiUserDuotone />,
+    settings: <PiGearDuotone />,
+    postJob: <PiPlusCircleDuotone />,
+    jobs: <PiBriefcaseDuotone />,
+    applications: <PiFileTextDuotone />,
+    users: <PiUsersDuotone />,
 }
 
 export default navigationIcon
+

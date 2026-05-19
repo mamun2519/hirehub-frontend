@@ -1,5 +1,12 @@
-import navigationConfig from '@/configs/navigation.config'
+import { auth } from '@/auth'
+import { getNavigationConfig } from '@/configs/navigation.config'
 
-export async function getNavigation() {
-    return navigationConfig
+export async function getNavigation(role?: string) {
+    let resolvedRole = role
+    if (!resolvedRole) {
+        const session = await auth()
+        resolvedRole = session?.user?.authority?.[0]
+    }
+    return getNavigationConfig(resolvedRole)
 }
+
