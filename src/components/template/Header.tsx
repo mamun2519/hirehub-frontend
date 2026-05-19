@@ -1,5 +1,6 @@
 import classNames from '@/utils/classNames'
 import { HEADER_HEIGHT } from '@/constants/theme.constant'
+import DarkModeToggle from '@/components/template/DarkModeToggle'
 import type { ReactNode } from 'react'
 import type { CommonProps } from '@/@types/common'
 
@@ -40,6 +41,7 @@ const Header = (props: HeaderProps) => {
                     </div>
                 )}
                 <div className="header-action header-action-end">
+                    <DarkModeToggle />
                     {headerEnd}
                 </div>
             </div>
