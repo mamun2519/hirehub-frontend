@@ -26,15 +26,6 @@ const adminNavigationConfig: NavigationTree[] = [
         subMenu: [],
     },
     {
-        key: 'admin.jobs',
-        path: '/portal/jobs',
-        title: 'Manage Jobs',
-        icon: 'jobs',
-        type: NAV_ITEM_TYPE_ITEM,
-        authority: [ADMIN],
-        subMenu: [],
-    },
-    {
         key: 'admin.settings',
         path: '/portal/settings',
         title: 'Settings',
