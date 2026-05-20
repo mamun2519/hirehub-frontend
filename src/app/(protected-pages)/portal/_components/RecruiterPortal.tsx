@@ -52,29 +52,54 @@ export default function RecruiterPortal({ user }: RecruiterPortalProps) {
     ]
 
     const candidates = [
-        { name: 'Michael Chang', role: 'Senior React Developer', status: 'Applied', date: '2 hours ago' },
-        { name: 'Sophia Loren', role: 'UX Designer', status: 'Shortlisted', date: '1 day ago' },
-        { name: 'David Miller', role: 'Full Stack Engineer', status: 'Interviewing', date: '2 days ago' },
-        { name: 'Emma Wilson', role: 'Product Manager', status: 'Applied', date: '3 days ago' },
+        {
+            name: 'Michael Chang',
+            role: 'Senior React Developer',
+            status: 'Applied',
+            date: '2 hours ago',
+        },
+        {
+            name: 'Sophia Loren',
+            role: 'UX Designer',
+            status: 'Shortlisted',
+            date: '1 day ago',
+        },
+        {
+            name: 'David Miller',
+            role: 'Full Stack Engineer',
+            status: 'Interviewing',
+            date: '2 days ago',
+        },
+        {
+            name: 'Emma Wilson',
+            role: 'Product Manager',
+            status: 'Applied',
+            date: '3 days ago',
+        },
     ]
 
     return (
         <div className="flex flex-col gap-6 p-4">
             {/* Header Welcome banner */}
-            <div className="bg-gradient-to-r from-teal-950 via-emerald-950 to-teal-950 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+            <div className="bg-gradient-to-r from-teal-950 via-emerald-950 to-teal-950 rounded-2xl p-6 shadow-xl relative overflow-hidden">
                 <div className="absolute right-0 top-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl" />
-                <h1 className="text-3xl font-extrabold tracking-tight mb-2">
+                <h1 className="text-3xl font-extrabold tracking-tight mb-2 text-white">
                     Welcome Back, {user.name || 'Recruiter'}!
                 </h1>
                 <p className="text-gray-300 max-w-xl text-sm leading-relaxed">
-                    Build your dream team today. Review active candidate pipelines, manage your current jobs listings, and schedule upcoming interviews.
+                    Build your dream team today. Review active candidate
+                    pipelines, manage your current jobs listings, and schedule
+                    upcoming interviews.
                 </p>
             </div>
 
             {/* KPI Stats grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {stats.map((stat, idx) => (
-                    <Card key={idx} className="border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300">
+                    <Card
+                        key={idx}
+                        className="border border-gray-100 dark:border-gray-800 shadow-sm hover:shadow-md transition-all duration-300"
+                    >
                         <div className="flex items-center justify-between gap-4">
                             <div className="flex flex-col gap-1">
                                 <span className="text-xs font-semibold text-gray-500 uppercase tracking-wider">
@@ -98,20 +123,37 @@ export default function RecruiterPortal({ user }: RecruiterPortalProps) {
             {/* Content layout split */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Recent Candidates list */}
-                <Card className="lg:col-span-2 border border-gray-100 dark:border-gray-800 shadow-sm" header={{ content: 'Recent Applicant Pipeline', bordered: true }}>
+                <Card
+                    className="lg:col-span-2 border border-gray-100 dark:border-gray-800 shadow-sm"
+                    header={{
+                        content: 'Recent Applicant Pipeline',
+                        bordered: true,
+                    }}
+                >
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
                                 <tr className="border-b border-gray-100 dark:border-gray-800">
-                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">Applicant</th>
-                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">Role Applied For</th>
-                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">Status</th>
-                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">Applied</th>
+                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">
+                                        Applicant
+                                    </th>
+                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">
+                                        Role Applied For
+                                    </th>
+                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">
+                                        Status
+                                    </th>
+                                    <th className="pb-3 text-xs font-bold text-gray-400 uppercase">
+                                        Applied
+                                    </th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {candidates.map((c, i) => (
-                                    <tr key={i} className="border-b border-gray-50 dark:border-gray-900 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-900/50 transition-colors">
+                                    <tr
+                                        key={i}
+                                        className="border-b border-gray-50 dark:border-gray-900 last:border-0 hover:bg-gray-50/50 dark:hover:bg-gray-900/50 transition-colors"
+                                    >
                                         <td className="py-4 font-semibold text-sm heading-text">
                                             {c.name}
                                         </td>
@@ -123,11 +165,12 @@ export default function RecruiterPortal({ user }: RecruiterPortalProps) {
                                                 className="capitalize"
                                                 content={c.status}
                                                 innerClass={
-                                                    c.status === 'Interviewing' 
+                                                    c.status === 'Interviewing'
                                                         ? 'bg-blue-100 text-blue-800 dark:bg-blue-950/40 dark:text-blue-300'
-                                                        : c.status === 'Shortlisted'
-                                                        ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
-                                                        : 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
+                                                        : c.status ===
+                                                            'Shortlisted'
+                                                          ? 'bg-emerald-100 text-emerald-800 dark:bg-emerald-950/40 dark:text-emerald-300'
+                                                          : 'bg-amber-100 text-amber-800 dark:bg-amber-950/40 dark:text-amber-300'
                                                 }
                                             />
                                         </td>
@@ -142,28 +185,46 @@ export default function RecruiterPortal({ user }: RecruiterPortalProps) {
                 </Card>
 
                 {/* Quick actions panel */}
-                <Card className="border border-gray-100 dark:border-gray-800 shadow-sm" header={{ content: 'Recruiter Hub Actions', bordered: true }}>
+                <Card
+                    className="border border-gray-100 dark:border-gray-800 shadow-sm"
+                    header={{
+                        content: 'Recruiter Hub Actions',
+                        bordered: true,
+                    }}
+                >
                     <div className="flex flex-col gap-3">
                         <Link href="/portal/jobs/new" className="w-full">
-                            <Button className="w-full flex items-center justify-center gap-2" variant="solid">
+                            <Button
+                                className="w-full flex items-center justify-center gap-2"
+                                variant="solid"
+                            >
                                 <PiPlusCircleDuotone className="text-lg" />
                                 Post a New Job
                             </Button>
                         </Link>
                         <Link href="/portal/jobs" className="w-full">
-                            <Button className="w-full flex items-center justify-center gap-2" variant="default">
+                            <Button
+                                className="w-full flex items-center justify-center gap-2"
+                                variant="default"
+                            >
                                 <PiBriefcaseDuotone className="text-lg" />
                                 Manage Current Jobs
                             </Button>
                         </Link>
                         <Link href="/portal/applications" className="w-full">
-                            <Button className="w-full flex items-center justify-center gap-2" variant="default">
+                            <Button
+                                className="w-full flex items-center justify-center gap-2"
+                                variant="default"
+                            >
                                 <PiFileTextDuotone className="text-lg" />
                                 View All Applications
                             </Button>
                         </Link>
                         <Link href="/portal/settings" className="w-full">
-                            <Button className="w-full flex items-center justify-center gap-2" variant="plain">
+                            <Button
+                                className="w-full flex items-center justify-center gap-2"
+                                variant="plain"
+                            >
                                 <PiGearDuotone className="text-lg" />
                                 Recruiter Settings
                             </Button>
