@@ -74,7 +74,7 @@ const SignUpForm = (props: SignUpFormProps) => {
         }
 
         try {
-            await ApiService.fetchDataWithAxios({
+            await ApiService.triggerApiSync({
                 url: '/auth/signup',
                 method: 'post',
                 data: payload,

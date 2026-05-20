@@ -17,6 +17,22 @@ export const protectedRoutes: Routes = {
             pageContainerType: 'contained',
         },
     },
+    '/portal/settings': {
+        key: 'portal.settings',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/portal/profile': {
+        key: 'portal.profile',
+        authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
     ...adminRoute,
     ...recruiterRoute,
     ...candidateRoute,

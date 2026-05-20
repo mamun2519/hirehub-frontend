@@ -85,7 +85,7 @@ export default function UserManagementPage() {
     const fetchUsers = async () => {
         setLoading(true)
         try {
-            const response = await ApiService.fetchDataWithAxios<{
+            const response = await ApiService.triggerApiSync<{
                 success: boolean
                 data: {
                     meta: { page: number; limit: number; total: number }
@@ -114,7 +114,11 @@ export default function UserManagementPage() {
                         const profile = user.recruiterProfile || {}
                         return {
                             id: user.id,
-                            name: profile.name || 'N/A',
+                            name:
+                                user.name ||
+                                profile.companyName ||
+                                profile.name ||
+                                'N/A',
                             website: profile.website || '',
                             email: user.email,
                             location: profile.location || 'N/A',
@@ -130,7 +134,7 @@ export default function UserManagementPage() {
                         const profile = user.candidateProfile || {}
                         return {
                             id: user.id,
-                            name: profile.fullName || 'N/A',
+                            name: user.name || profile.fullName || 'N/A',
                             email: user.email,
                             role:
                                 profile.skills && profile.skills.length > 0
@@ -157,7 +161,7 @@ export default function UserManagementPage() {
         if (!userToDelete) return
         setIsDeleting(true)
         try {
-            await ApiService.fetchDataWithAxios({
+            await ApiService.triggerApiSync({
                 url: `/users/${userToDelete.id}`,
                 method: 'delete',
             })

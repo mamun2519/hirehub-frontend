@@ -28,9 +28,9 @@ const validateCredential = async (values: SignInCredential) => {
 
             return {
                 id: user.id,
-                userName: user.email.split('@')[0],
+                userName: user.name || user.email.split('@')[0],
                 email: user.email,
-                avatar: '',
+                avatar: user.avatar || '',
                 authority: [user.role],
                 accessToken,
             }

@@ -77,7 +77,7 @@ function ModifyRecruiterFormContent() {
             const loadUser = async () => {
                 setLoadingData(true)
                 try {
-                    const response = await ApiService.fetchDataWithAxios<any>({
+                    const response = await ApiService.triggerApiSync<any>({
                         url: `/users/${id}`,
                         method: 'get',
                     })
@@ -85,7 +85,11 @@ function ModifyRecruiterFormContent() {
                         const user = response.data
                         const profile = user.recruiterProfile || {}
                         reset({
-                            name: profile.name || '',
+                            name:
+                                user.name ||
+                                profile.companyName ||
+                                profile.name ||
+                                '',
                             website: profile.website || '',
                             email: user.email || '',
                             location: profile.location || '',
@@ -123,7 +127,7 @@ function ModifyRecruiterFormContent() {
 
         try {
             if (isEditMode) {
-                await ApiService.fetchDataWithAxios({
+                await ApiService.triggerApiSync({
                     url: `/users/${id}`,
                     method: 'patch',
                     data: payload,
@@ -134,7 +138,7 @@ function ModifyRecruiterFormContent() {
                     </Notification>,
                 )
             } else {
-                await ApiService.fetchDataWithAxios({
+                await ApiService.triggerApiSync({
                     url: '/users/create',
                     method: 'post',
                     data: payload,
@@ -165,7 +169,9 @@ function ModifyRecruiterFormContent() {
                 <div>
                     <h1 className="text-2xl font-bold heading-text flex items-center gap-2">
                         <PiBriefcaseDuotone className="text-indigo-600 dark:text-indigo-400" />
-                        {isEditMode ? 'Edit Recruiter Account' : 'Create Recruiter Account'}
+                        {isEditMode
+                            ? 'Edit Recruiter Account'
+                            : 'Create Recruiter Account'}
                     </h1>
                     <p className="text-xs text-gray-400">
                         {isEditMode
@@ -180,125 +186,136 @@ function ModifyRecruiterFormContent() {
                 <Loading loading={isLoadingData} type="cover">
                     <Form onSubmit={handleSubmit(onSubmit)}>
                         <div className="flex flex-col gap-4">
-                        {message && (
-                            <Alert type="danger" showIcon closable onClose={() => setMessage('')}>
-                                {message}
-                            </Alert>
-                        )}
-                        {/* Company Name */}
-                        <FormItem
-                            label="Company Name"
-                            invalid={Boolean(errors.name)}
-                            errorMessage={errors.name?.message}
-                        >
-                            <Controller
-                                name="name"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        placeholder="Enter company name (e.g. Google)"
-                                        autoComplete="off"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-
-                        {/* Website */}
-                        <FormItem
-                            label="Company Website"
-                            invalid={Boolean(errors.website)}
-                            errorMessage={errors.website?.message}
-                        >
-                            <Controller
-                                name="website"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        placeholder="Enter website (e.g. google.com)"
-                                        autoComplete="off"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-
-                        {/* Contact Email */}
-                        <FormItem
-                            label="Contact Email"
-                            invalid={Boolean(errors.email)}
-                            errorMessage={errors.email?.message}
-                        >
-                            <Controller
-                                name="email"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        type="email"
-                                        placeholder="Enter recruiter contact email"
-                                        autoComplete="off"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-
-                        {/* Location */}
-                        <FormItem
-                            label="Location"
-                            invalid={Boolean(errors.location)}
-                            errorMessage={errors.location?.message}
-                        >
-                            <Controller
-                                name="location"
-                                control={control}
-                                render={({ field }) => (
-                                    <Input
-                                        placeholder="Enter corporate office location (e.g. San Francisco, CA)"
-                                        autoComplete="off"
-                                        {...field}
-                                    />
-                                )}
-                            />
-                        </FormItem>
-
-                        {/* Action buttons */}
-                        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
-                            <Link href="/portal/users">
-                                <Button type="button" variant="plain" size="sm">
-                                    Cancel
-                                </Button>
-                            </Link>
-                            <Button
-                                variant="solid"
-                                type="submit"
-                                size="sm"
-                                loading={isSubmitting}
+                            {message && (
+                                <Alert
+                                    type="danger"
+                                    showIcon
+                                    closable
+                                    onClose={() => setMessage('')}
+                                >
+                                    {message}
+                                </Alert>
+                            )}
+                            {/* Company Name */}
+                            <FormItem
+                                label="Company Name"
+                                invalid={Boolean(errors.name)}
+                                errorMessage={errors.name?.message}
                             >
-                                {isSubmitting
-                                    ? isEditMode
-                                        ? 'Saving...'
-                                        : 'Creating...'
-                                    : isEditMode
-                                    ? 'Save Changes'
-                                    : 'Create Recruiter'}
-                            </Button>
+                                <Controller
+                                    name="name"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            placeholder="Enter company name (e.g. Google)"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+
+                            {/* Website */}
+                            <FormItem
+                                label="Company Website"
+                                invalid={Boolean(errors.website)}
+                                errorMessage={errors.website?.message}
+                            >
+                                <Controller
+                                    name="website"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            placeholder="Enter website (e.g. google.com)"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+
+                            {/* Contact Email */}
+                            <FormItem
+                                label="Contact Email"
+                                invalid={Boolean(errors.email)}
+                                errorMessage={errors.email?.message}
+                            >
+                                <Controller
+                                    name="email"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            type="email"
+                                            placeholder="Enter recruiter contact email"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+
+                            {/* Location */}
+                            <FormItem
+                                label="Location"
+                                invalid={Boolean(errors.location)}
+                                errorMessage={errors.location?.message}
+                            >
+                                <Controller
+                                    name="location"
+                                    control={control}
+                                    render={({ field }) => (
+                                        <Input
+                                            placeholder="Enter corporate office location (e.g. San Francisco, CA)"
+                                            autoComplete="off"
+                                            {...field}
+                                        />
+                                    )}
+                                />
+                            </FormItem>
+
+                            {/* Action buttons */}
+                            <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-gray-100 dark:border-gray-800">
+                                <Link href="/portal/users">
+                                    <Button
+                                        type="button"
+                                        variant="plain"
+                                        size="sm"
+                                    >
+                                        Cancel
+                                    </Button>
+                                </Link>
+                                <Button
+                                    variant="solid"
+                                    type="submit"
+                                    size="sm"
+                                    loading={isSubmitting}
+                                >
+                                    {isSubmitting
+                                        ? isEditMode
+                                            ? 'Saving...'
+                                            : 'Creating...'
+                                        : isEditMode
+                                          ? 'Save Changes'
+                                          : 'Create Recruiter'}
+                                </Button>
+                            </div>
                         </div>
-                    </div>
-                </Form>
-            </Loading>
-        </Card>
+                    </Form>
+                </Loading>
+            </Card>
         </div>
     )
 }
 
 export default function ModifyRecruiterPage() {
     return (
-        <Suspense fallback={
-            <div className="flex items-center justify-center p-12">
-                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
-            </div>
-        }>
+        <Suspense
+            fallback={
+                <div className="flex items-center justify-center p-12">
+                    <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                </div>
+            }
+        >
             <ModifyRecruiterFormContent />
         </Suspense>
     )

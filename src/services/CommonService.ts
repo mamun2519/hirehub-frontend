@@ -1,7 +1,7 @@
 import ApiService from './ApiService'
 
 export async function apiGetNotificationCount() {
-    return ApiService.fetchDataWithAxios<{
+    return ApiService.triggerApiSync<{
         count: number
     }>({
         url: '/notifications/count',
@@ -10,7 +10,7 @@ export async function apiGetNotificationCount() {
 }
 
 export async function apiGetNotificationList() {
-    return ApiService.fetchDataWithAxios<
+    return ApiService.triggerApiSync<
         {
             id: string
             target: string
@@ -30,7 +30,7 @@ export async function apiGetNotificationList() {
 }
 
 export async function apiGetSearchResult<T>(params: { query: string }) {
-    return ApiService.fetchDataWithAxios<T>({
+    return ApiService.triggerApiSync<T>({
         url: '/search',
         method: 'get',
         params,

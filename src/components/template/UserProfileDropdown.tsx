@@ -6,7 +6,8 @@ import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import Link from 'next/link'
 import signOut from '@/server/actions/auth/handleSignOut'
 import useCurrentSession from '@/utils/hooks/useCurrentSession'
-import { PiUserDuotone, PiSignOutDuotone } from 'react-icons/pi'
+import { PiUserDuotone, PiSignOutDuotone, PiGearDuotone } from 'react-icons/pi'
+import appConfig from '@/configs/app.config'
 
 import type { JSX } from 'react'
 
@@ -16,7 +17,13 @@ type DropdownList = {
     icon: JSX.Element
 }
 
-const dropdownItemList: DropdownList[] = []
+const dropdownItemList: DropdownList[] = [
+    {
+        label: 'Settings',
+        path: '/portal/settings',
+        icon: <PiGearDuotone />,
+    },
+]
 
 const _UserDropdown = () => {
     const { session } = useCurrentSession()
@@ -25,9 +32,15 @@ const _UserDropdown = () => {
         await signOut()
     }
 
+    const displayAvatarSrc = session?.user?.avatar
+        ? session.user.avatar.startsWith('http')
+            ? session.user.avatar
+            : `${appConfig.serverBaseUrl}${session.user.avatar}`
+        : ''
+
     const avatarProps = {
-        ...(session?.user?.image
-            ? { src: session?.user?.image }
+        ...(displayAvatarSrc
+            ? { src: displayAvatarSrc }
             : { icon: <PiUserDuotone /> }),
     }
 

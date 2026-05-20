@@ -6,16 +6,20 @@ declare module 'next-auth' {
         user: {
             id: string
             authority: string[] /** add extra user attributes here */
+            avatar?: string | null
         } & DefaultSession['user']
     }
 
     interface User extends DefaultUser {
         authority: string[]
+        avatar?: string | null
     }
 }
 
 declare module 'next-auth/jwt' {
     interface JWT extends DefaultJWT {
         authority: string[]
+        avatar?: string | null
     }
 }
+

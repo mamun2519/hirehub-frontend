@@ -41,6 +41,7 @@ export default {
             if (user) {
                 token.authority = user.authority
                 token.accessToken = (user as any).accessToken
+                token.avatar = user.image
             }
             return token
         },
@@ -53,6 +54,7 @@ export default {
                     id: token.sub,
                     authority: token.authority as string[],
                     accessToken: token.accessToken as string,
+                    avatar: token.avatar as string | undefined,
                 },
             }
         },
