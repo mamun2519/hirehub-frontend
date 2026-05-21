@@ -152,10 +152,16 @@ export default function ApplicationsPage() {
             />
 
             {/* Main content card */}
-            <Card className="border border-gray-100 dark:border-gray-800 shadow-sm rounded-2xl p-4 md:p-6">
+            <Card className="border border-gray-100 dark:border-gray-800 shadow-sm rounded-2xl">
                 <div className="flex flex-col gap-5">
                     {/* Filters row */}
                     <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-3">
+                        {/* Result count badge */}
+                        <div className="hidden sm:flex items-center gap-1.5 px-3 py-3.25 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 font-semibold text-gray-500 dark:text-gray-400 flex-shrink-0">
+                            <PiFileTextDuotone className="text-indigo-400 text-sm" />
+                            {filtered.length} result
+                            {filtered.length !== 1 ? 's' : ''}
+                        </div>
                         {/* Search */}
                         <div className="relative flex-1">
                             <PiMagnifyingGlassDuotone className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-base pointer-events-none" />
@@ -191,13 +197,6 @@ export default function ApplicationsPage() {
                             isSearchable={false}
                             placeholder="All Statuses"
                         />
-
-                        {/* Result count badge */}
-                        <div className="hidden sm:flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-gray-100 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-xs font-semibold text-gray-500 dark:text-gray-400 flex-shrink-0">
-                            <PiFileTextDuotone className="text-indigo-400 text-sm" />
-                            {filtered.length} result
-                            {filtered.length !== 1 ? 's' : ''}
-                        </div>
                     </div>
 
                     {/* Empty state */}
