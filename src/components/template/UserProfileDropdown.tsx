@@ -4,9 +4,10 @@ import Avatar from '@/components/ui/Avatar'
 import Dropdown from '@/components/ui/Dropdown'
 import withHeaderItem from '@/utils/hoc/withHeaderItem'
 import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import signOut from '@/server/actions/auth/handleSignOut'
 import useCurrentSession from '@/utils/hooks/useCurrentSession'
-import { PiUserDuotone, PiSignOutDuotone, PiGearDuotone } from 'react-icons/pi'
+import { PiUserDuotone, PiSignOutDuotone, PiGearDuotone, PiHouseDuotone } from 'react-icons/pi'
 import appConfig from '@/configs/app.config'
 
 import type { JSX } from 'react'
@@ -17,7 +18,13 @@ type DropdownList = {
     icon: JSX.Element
 }
 
-const dropdownItemList: DropdownList[] = [
+const dashboardItem: DropdownList = {
+    label: 'Dashboard',
+    path: '/portal',
+    icon: <PiHouseDuotone />,
+}
+
+const portalDropdownItemList: DropdownList[] = [
     {
         label: 'Settings',
         path: '/portal/settings',
@@ -26,7 +33,13 @@ const dropdownItemList: DropdownList[] = [
 ]
 
 const _UserDropdown = () => {
+    const pathname = usePathname()
     const { session } = useCurrentSession()
+
+    const isPortalRoute = pathname.startsWith('/portal')
+    const dropdownItemList = isPortalRoute
+        ? portalDropdownItemList
+        : [dashboardItem, ...portalDropdownItemList]
 
     const handleSignOut = async () => {
         await signOut()

@@ -78,11 +78,6 @@ export default function PublicLayout({
 
                             {session ? (
                                 <div className="flex items-center gap-4">
-                                    <Link href="/portal">
-                                        <Button size="sm" variant="default">
-                                            Dashboard
-                                        </Button>
-                                    </Link>
                                     <UserDropdown />
                                 </div>
                             ) : (
