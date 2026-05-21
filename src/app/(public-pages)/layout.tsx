@@ -26,7 +26,7 @@ export default function PublicLayout({
     }
 
     const navLinks = [
-        { label: 'Find Jobs', href: '#' },
+        { label: 'Find Jobs', href: '/jobs' },
         { label: 'Browse Companies', href: '#' },
         { label: 'Pricing', href: '#' },
         { label: 'About Us', href: '#' },
@@ -88,7 +88,10 @@ export default function PublicLayout({
                                         </span>
                                     </Link>
                                     <Link href="/sign-up">
-                                        <Button size="sm" variant="solid">
+                                        <Button
+                                            variant="plain"
+                                            className="bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/10 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 border-0 h-9 px-4 flex items-center justify-center rounded-xl text-xs"
+                                        >
                                             Post a Job
                                         </Button>
                                     </Link>
@@ -147,11 +150,15 @@ export default function PublicLayout({
                                         {session.user?.name || 'My Account'}
                                     </span>
                                 </div>
-                                <Link
+                                 <Link
                                     href="/portal"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    <Button block size="md" variant="solid">
+                                    <Button
+                                        block
+                                        variant="plain"
+                                        className="w-full bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/10 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 border-0 h-10 flex items-center justify-center rounded-xl"
+                                    >
                                         Go to Dashboard
                                     </Button>
                                 </Link>
@@ -162,7 +169,11 @@ export default function PublicLayout({
                                     href="/sign-in"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    <Button block variant="default">
+                                    <Button
+                                        block
+                                        variant="plain"
+                                        className="w-full bg-white border border-gray-200 text-gray-700 hover:bg-gray-50 dark:bg-gray-900 dark:border-gray-800 dark:text-gray-200 dark:hover:bg-gray-800 font-bold transition-all duration-300 hover:scale-[1.02] shadow-sm h-10 flex items-center justify-center rounded-xl"
+                                    >
                                         Sign In
                                     </Button>
                                 </Link>
@@ -170,7 +181,11 @@ export default function PublicLayout({
                                     href="/sign-up"
                                     onClick={() => setMobileMenuOpen(false)}
                                 >
-                                    <Button block variant="solid">
+                                    <Button
+                                        block
+                                        variant="plain"
+                                        className="w-full bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/10 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 border-0 h-10 flex items-center justify-center rounded-xl"
+                                    >
                                         Post a Job
                                     </Button>
                                 </Link>
@@ -233,18 +248,18 @@ export default function PublicLayout({
                             </h4>
                             <ul className="space-y-2">
                                 {[
-                                    'Explore Jobs',
-                                    'Upload Resume',
-                                    'Job Alerts',
-                                    'Resources',
+                                    { label: 'Explore Jobs', href: '/jobs' },
+                                    { label: 'Upload Resume', href: '/jobs' },
+                                    { label: 'Job Alerts', href: '/jobs' },
+                                    { label: 'Resources', href: '#' },
                                 ].map((item) => (
-                                    <li key={item}>
-                                        <a
-                                            href="#"
+                                    <li key={item.label}>
+                                        <Link
+                                            href={item.href}
                                             className="text-sm text-gray-500 hover:text-primary dark:text-gray-400 dark:hover:text-white transition-colors"
                                         >
-                                            {item}
-                                        </a>
+                                            {item.label}
+                                        </Link>
                                     </li>
                                 ))}
                             </ul>

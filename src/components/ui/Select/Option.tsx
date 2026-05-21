@@ -10,18 +10,17 @@ type DefaultOptionProps<T> = {
 const Option = <T,>(
     props: ReactSelectOptionProps<T> & DefaultOptionProps<T>,
 ) => {
-    const { innerProps, label, isSelected, isDisabled, data, customLabel } =
+    const { innerProps, label, isSelected, isDisabled, isFocused, data, customLabel } =
         props
 
     return (
         <div
             className={classNames(
-                'select-option',
-                !isDisabled &&
-                    !isSelected &&
-                    'hover:text-gray-800 dark:hover:text-gray-100',
-                isSelected && 'text-primary bg-primary-subtle',
-                isDisabled && 'opacity-50 cursor-not-allowed',
+                'select-option transition-all duration-150',
+                isSelected && 'text-primary bg-primary/10 dark:bg-primary/20 font-bold',
+                isFocused && !isSelected && 'bg-gray-100/70 dark:bg-gray-800/60 text-gray-900 dark:text-gray-100',
+                !isSelected && !isFocused && 'text-gray-600 dark:text-gray-400 hover:bg-gray-50/50 dark:hover:bg-gray-800/40 hover:text-gray-900 dark:hover:text-gray-100',
+                isDisabled && 'opacity-50 cursor-not-allowed pointer-events-none',
             )}
             {...innerProps}
         >
@@ -30,7 +29,7 @@ const Option = <T,>(
             ) : (
                 <span className="ml-2">{label}</span>
             )}
-            {isSelected && <HiCheck className="text-xl" />}
+            {isSelected && <HiCheck className="text-xl text-primary" />}
         </div>
     )
 }

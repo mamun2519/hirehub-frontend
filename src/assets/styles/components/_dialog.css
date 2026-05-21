@@ -5,12 +5,16 @@
   }
   
   .dialog-content {
-    @apply p-6 rounded-2xl shadow-xl mx-4 my-8 sm:mx-0 sm:my-16 relative h-full bg-white dark:bg-gray-800;
+    @apply p-6 md:p-8 rounded-[24px] shadow-2xl mx-4 my-8 sm:mx-0 sm:my-16 relative max-h-[90vh] overflow-y-auto bg-white dark:bg-gray-950/95 backdrop-blur-xl border border-gray-200/60 dark:border-gray-800/60;
   }
   
   .dialog-overlay {
     transition: all 0.15s ease-in-out;
-    @apply inset-0 fixed z-40 bg-black/60 dark:bg-black/80 backdrop-blur-md;
+    @apply inset-0 fixed z-[100] bg-black/60 dark:bg-black/80;
+  }
+
+  .dialog-overlay-blur {
+    @apply backdrop-blur-md;
   }
   
   .dialog-overlay-after-open {

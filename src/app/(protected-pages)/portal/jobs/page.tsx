@@ -70,7 +70,9 @@ export default function ManageJobsPage() {
                     params.remoteInfo = currentFilters.remoteInfo
 
                 const response = await apiGetJobs<any>(params)
-                if (response?.data) setJobs(response.data)
+                const responseData = response?.data
+                const rawJobs = responseData?.data ?? responseData
+                setJobs(Array.isArray(rawJobs) ? rawJobs : [])
             } catch (err) {
                 console.error('Failed to fetch jobs:', err)
             } finally {

@@ -135,7 +135,7 @@ const Button = (props: ButtonProps) => {
         const btn = {
             bgColor: active ? `` : `dark:primary-mild dark:bg-opacity-20`,
             textColor: ``,
-            hoverColor: active ? '' : `hover:text-primary-mild`,
+            hoverColor: active ? '' : `hover:text-primary-soft`,
             activeColor: `dark:active:primary-mild dark:active:bg-opacity-40`,
         }
         return getBtnColor(btn)

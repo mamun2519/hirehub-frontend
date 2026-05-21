@@ -42,7 +42,7 @@ export default function JobsTable({
                     const row = props.row.original
                     return (
                         <div className="flex flex-col gap-1 py-1">
-                            <span className="font-semibold text-gray-900 dark:text-gray-150 text-sm">
+                            <span className="font-semibold text-gray-900 dark:text-gray-200 text-sm">
                                 {row.title}
                             </span>
                             <span className="text-xs text-gray-400 flex items-center gap-1">

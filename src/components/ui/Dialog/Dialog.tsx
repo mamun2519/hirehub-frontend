@@ -12,6 +12,7 @@ export interface DialogProps extends ReactModal.Props {
     height?: string | number
     onClose?: (e: MouseEvent<HTMLSpanElement>) => void
     width?: number
+    backdropBlur?: boolean
 }
 
 const Dialog = (props: DialogProps) => {
@@ -31,6 +32,7 @@ const Dialog = (props: DialogProps) => {
         portalClassName,
         style,
         width = 520,
+        backdropBlur = false,
         ...rest
     } = props
 
@@ -80,7 +82,11 @@ const Dialog = (props: DialogProps) => {
                 beforeClose: 'dialog-before-close',
             }}
             overlayClassName={{
-                base: classNames('dialog-overlay', overlayClassName as string),
+                base: classNames(
+                    'dialog-overlay',
+                    backdropBlur && 'dialog-overlay-blur',
+                    overlayClassName as string
+                ),
                 afterOpen: 'dialog-overlay-after-open',
                 beforeClose: 'dialog-overlay-before-close',
             }}

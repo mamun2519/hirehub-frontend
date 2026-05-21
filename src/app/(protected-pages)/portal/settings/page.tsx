@@ -144,7 +144,7 @@ export default function SettingsPage() {
             >
                 <div className="flex flex-col gap-6">
                     {/* Tab Navigation Container */}
-                    <div className="border-b border-gray-150 dark:border-gray-800">
+                    <div className="border-b border-gray-200 dark:border-gray-800">
                         <TabList className="flex gap-6 overflow-x-auto scrollbar-none pb-0">
                             <TabNav
                                 value="personal"

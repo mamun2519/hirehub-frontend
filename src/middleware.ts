@@ -8,7 +8,7 @@ import {
 } from '@/configs/routes.config'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import appConfig from '@/configs/app.config'
-import { matchRoute } from '@/utils/queryRoute'
+import { isPublicPath, matchRoute } from '@/utils/queryRoute'
 
 const { auth } = NextAuth(authConfig)
 
@@ -22,7 +22,7 @@ export default auth((req) => {
     const isSignedIn = !!req.auth
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
-    const isPublicRoute = publicRoutes.includes(nextUrl.pathname)
+    const isPublicRoute = isPublicPath(nextUrl.pathname)
     const isAuthRoute = authRoutes.includes(nextUrl.pathname)
 
     /** Skip auth middleware for api routes */
@@ -69,5 +69,5 @@ export default auth((req) => {
 })
 
 export const config = {
-    matcher: ['/((?!.+\\.[\\w]+$|_next).*)', '/', '/(api)(.*)'],
+    matcher: ['/((?!.+\.[\w]+$|_next).*)', '/', '/(api)(.*)'],
 }

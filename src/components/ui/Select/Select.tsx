@@ -117,7 +117,7 @@ function Select<
                             state.isDisabled && 'opacity-50 cursor-not-allowed',
                             (() => {
                                 const classes: string[] = [
-                                    'bg-gray-100 dark:bg-gray-700',
+                                    'bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 hover:border-gray-300 dark:hover:border-gray-700 shadow-sm transition-all duration-200',
                                 ]
 
                                 const { isFocused } = state
@@ -195,6 +195,7 @@ function Select<
                         boxShadow,
                         ...provided
                     }) => ({ ...provided, zIndex: 50 }),
+                    option: () => ({}),
                     ...styles,
                 } as StylesConfig<Option, IsMulti, Group>
             }
