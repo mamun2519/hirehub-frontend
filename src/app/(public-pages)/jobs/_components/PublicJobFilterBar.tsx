@@ -39,7 +39,7 @@ export default function PublicJobFilterBar({
     onClearFilters,
 }: Props) {
     return (
-        <Card className="relative z-30 space-y-6 border border-gray-200/60 bg-white/60 dark:bg-gray-950/40 dark:border-gray-800/60 backdrop-blur-xl shadow-xl shadow-gray-950/5 rounded-3xl p-6 md:p-8">
+        <Card className="relative  space-y-6 border border-gray-200/60 bg-white/60 dark:bg-gray-950/40 dark:border-gray-800/60 backdrop-blur-xl shadow-xl shadow-gray-950/5 rounded-3xl p-6 md:p-8">
             <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
                 <div>
                     <div className="flex items-center gap-2">

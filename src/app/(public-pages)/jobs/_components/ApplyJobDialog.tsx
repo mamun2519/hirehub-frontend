@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
@@ -10,11 +10,9 @@ import Input from '@/components/ui/Input'
 import Upload from '@/components/ui/Upload'
 import { Form, FormItem, Notification, toast } from '@/components/ui'
 import type { JobType } from '@/features/jobs'
-import {
-    buildApplicationPayload,
-    type ApplicationFormValues,
-    type ApplicationPayload,
-} from '@/features/applications'
+import type { ApplicationFormValues } from '@/features/applications'
+import useCurrentSession from '@/utils/hooks/useCurrentSession'
+import { apiApplyJob } from '@/services/ApplicationService'
 
 interface Props {
     job: JobType | null
@@ -48,11 +46,13 @@ const validationSchema = z.object({
 
 export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
     const [submitting, setSubmitting] = useState(false)
+    const { session } = useCurrentSession()
 
     const {
         control,
         handleSubmit,
         reset,
+        setValue,
         formState: { errors },
     } = useForm<ApplicationFormValues>({
         resolver: zodResolver(validationSchema) as any,
@@ -66,6 +66,17 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
         },
     })
 
+    useEffect(() => {
+        if (isOpen && session?.user) {
+            if (session.user.name) {
+                setValue('fullName', session.user.name)
+            }
+            if (session.user.email) {
+                setValue('email', session.user.email)
+            }
+        }
+    }, [session, setValue, isOpen])
+
     const closeDialog = () => {
         reset()
         onClose()
@@ -76,24 +87,37 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
 
         setSubmitting(true)
         try {
-            const payload = buildApplicationPayload(job, values, values.resume)
-
-            if (process.env.NODE_ENV !== 'production') {
-                console.log('Prepared application payload:', payload)
+            const formData = new FormData()
+            formData.append('jobId', job.id)
+            formData.append('fullName', values.fullName.trim())
+            formData.append('email', values.email.trim())
+            formData.append('phone', values.phone.trim())
+            if (values.coverLetter) {
+                formData.append('coverLetter', values.coverLetter.trim())
+            }
+            if (values.linkedInUrl) {
+                formData.append('linkedInUrl', values.linkedInUrl.trim())
+            }
+            if (values.resume) {
+                formData.append('file', values.resume)
             }
 
-            // Future wiring: submitApplication(payload)
-            const submitApplication = async (_payload: ApplicationPayload) => {
-                // API submission is intentionally deferred for this phase.
-            }
-            void submitApplication(payload)
+            await apiApplyJob(formData)
 
             toast.push(
-                <Notification title="Application prepared" type="success">
-                    Submission is coming soon. We saved everything you need.
+                <Notification title="Application Submitted" type="success">
+                    Your application for {job.title} has been submitted successfully!
                 </Notification>,
             )
             closeDialog()
+        } catch (error: any) {
+            console.error('Failed to submit application:', error)
+            const errorMsg = error?.response?.data?.message || 'Failed to submit application. Please try again.'
+            toast.push(
+                <Notification title="Submission failed" type="danger">
+                    {errorMsg}
+                </Notification>,
+            )
         } finally {
             setSubmitting(false)
         }
@@ -116,7 +140,7 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
                         {job?.title ?? 'Select a job first'}
                     </h2>
                     <p className="text-xs text-gray-500 dark:text-gray-400">
-                        This form prepares a typed application payload only. We are not submitting to the API yet.
+                        Fill out your information and upload your resume to apply for this job listing.
                     </p>
                 </div>
             </div>
@@ -279,7 +303,7 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
                     loading={submitting}
                     className="bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-200 hover:shadow-lg dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 rounded-xl border-0 h-10 px-5 flex items-center justify-center"
                 >
-                    Prepare application
+                    Submit application
                 </Button>
             </div>
         </Dialog>

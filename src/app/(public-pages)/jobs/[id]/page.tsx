@@ -3,14 +3,7 @@
 import { useEffect, useMemo, useState } from 'react'
 import { useParams, useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
-import {
-    Alert,
-    Button,
-    Card,
-    Spinner,
-    toast,
-    Notification,
-} from '@/components/ui'
+import { Button, Card, Spinner, toast, Notification } from '@/components/ui'
 import { apiGetJob } from '@/services/JobService'
 import type { JobType } from '@/features/jobs'
 import ApplyJobDialog from '../_components/ApplyJobDialog'
@@ -119,24 +112,93 @@ export default function PublicJobDetailPage() {
 
     if (error || !job) {
         return (
-            <div className="mx-auto flex w-full max-w-4xl flex-col gap-4 px-4 py-10 sm:px-6 lg:px-8">
-                <Alert
-                    type="warning"
-                    showIcon
-                    title="Job not available"
-                    className="rounded-2xl"
-                >
-                    {error || 'The listing you requested could not be loaded.'}
-                </Alert>
-                <div className="flex gap-3">
-                    <Button
-                        variant="plain"
-                        className="bg-gray-950 hover:bg-gray-900 text-white font-semibold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/10 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 dark:shadow-white/5 rounded-xl border-0 h-10 px-4 flex items-center gap-2"
-                        onClick={() => router.push('/jobs')}
-                    >
-                        <PiArrowLeftBold />
-                        Back to jobs
-                    </Button>
+            <div className="min-h-[80vh] w-full flex items-center justify-center px-4 py-16 bg-gradient-to-b from-gray-50 to-white dark:from-gray-950 dark:to-gray-900 relative overflow-hidden">
+                {/* Ambient Background Glows */}
+                <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[400px] h-[400px] bg-indigo-500/10 dark:bg-indigo-500/5 rounded-full blur-[80px] pointer-events-none" />
+                <div className="absolute bottom-1/4 left-1/3 w-[250px] h-[250px] bg-primary/10 dark:bg-primary/5 rounded-full blur-[60px] pointer-events-none" />
+
+                <div className="relative z-10 w-full max-w-md flex flex-col items-center">
+                    {/* Premium Card */}
+                    <div className="w-full text-center border border-gray-200/60 bg-white/60 dark:bg-gray-950/40 dark:border-gray-800/60 backdrop-blur-xl shadow-md shadow-gray-950/5 rounded-3xl p-8 md:p-12 flex flex-col items-center transition-all duration-500 hover:shadow-2xl hover:shadow-indigo-500/5">
+                        {/* Decorative Icon Container */}
+                        <div className="relative mb-6 flex h-24 w-24 items-center justify-center rounded-3xl bg-gradient-to-br from-indigo-500/10 to-primary/10 border border-indigo-500/20 dark:from-indigo-500/20 dark:to-primary/20 dark:border-indigo-500/30 shadow-inner group cursor-default">
+                            {/* Ambient soft glow */}
+                            <div className="absolute inset-0 bg-gradient-to-br from-indigo-500 to-primary rounded-3xl opacity-0 group-hover:opacity-10 blur-md transition-opacity duration-500" />
+                            {/* Pulse rings */}
+                            <span
+                                className="absolute inline-flex h-full w-full rounded-3xl bg-indigo-400/20 dark:bg-indigo-400/10 opacity-75 animate-ping pointer-events-none"
+                                style={{ animationDuration: '3s' }}
+                            />
+
+                            {/* Central dynamic illustration */}
+                            <div className="relative flex flex-col items-center justify-center transition-all duration-500 group-hover:scale-110 group-hover:rotate-6">
+                                <PiBriefcaseBold className="h-10 w-10 text-indigo-600 dark:text-indigo-400" />
+                                <div
+                                    className="absolute -bottom-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-amber-500 text-white shadow-sm ring-2 ring-white dark:ring-gray-950 animate-bounce"
+                                    style={{ animationDuration: '2s' }}
+                                >
+                                    <span className="text-[10px] font-extrabold font-sans">
+                                        !
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* Tagline */}
+                        <span className="inline-flex items-center gap-1.5 rounded-full bg-indigo-50 border border-indigo-100/80 px-3 py-1 text-[11px] font-bold uppercase tracking-[0.15em] text-indigo-600 dark:bg-indigo-950/40 dark:border-indigo-900/30 dark:text-indigo-400 mb-4 shadow-sm">
+                            Job Not Available
+                        </span>
+
+                        {/* Title */}
+                        <h2 className="text-2xl font-extrabold tracking-tight bg-gradient-to-r from-gray-950 via-gray-900 to-indigo-950 dark:from-white dark:via-gray-100 dark:to-indigo-200 bg-clip-text text-transparent leading-tight mb-3">
+                            Listing Not Found
+                        </h2>
+
+                        {/* Description */}
+                        <p className="text-gray-500 dark:text-gray-400 text-sm font-semibold max-w-xs leading-relaxed mb-8">
+                            {error ||
+                                'The listing you requested could not be loaded. It might have expired, been filled, or is temporarily offline.'}
+                        </p>
+
+                        {/* Actions */}
+                        <div className="flex flex-col gap-3 w-full">
+                            <Button
+                                variant="plain"
+                                className="w-full bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/20 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 dark:shadow-white/5 rounded-xl border-0 h-11 px-5 flex items-center justify-center gap-2 group"
+                                onClick={() => router.push('/jobs')}
+                            >
+                                <PiArrowLeftBold className="transition-transform duration-300 group-hover:-translate-x-1" />
+                                Back to jobs
+                            </Button>
+                        </div>
+                    </div>
+
+                    {/* Helpful suggestions */}
+                    <div className="mt-8 text-center text-xs font-semibold text-gray-400 dark:text-gray-500 space-y-2">
+                        <p>Need help finding a role?</p>
+                        <div className="flex flex-wrap justify-center gap-x-3 gap-y-1.5 text-gray-500 dark:text-gray-400">
+                            <a
+                                href="/jobs?type=Full-time"
+                                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                            >
+                                Full-time
+                            </a>
+                            <span>•</span>
+                            <a
+                                href="/jobs?type=Remote"
+                                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                            >
+                                Remote Jobs
+                            </a>
+                            <span>•</span>
+                            <a
+                                href="/jobs?level=Entry"
+                                className="hover:text-indigo-600 dark:hover:text-indigo-400 transition-colors"
+                            >
+                                Entry Level
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         )
@@ -181,7 +243,7 @@ export default function PublicJobDetailPage() {
                 </div>
 
                 <Card className="overflow-hidden border border-gray-200/60 bg-white/60 dark:bg-gray-950/40 dark:border-gray-800/60 backdrop-blur-xl shadow-xl shadow-gray-950/5 rounded-3xl">
-                    <div className="relative border-b border-gray-200/60 bg-gradient-to-br from-primary/5 via-white to-indigo-50/20 dark:border-gray-800/60 dark:from-gray-900/40 dark:via-gray-950/60 dark:to-gray-900/40 p-6 md:p-8">
+                    <div className="relative rounded-xl overflow-hidden border-b border-gray-200/60 bg-gradient-to-br from-primary/5 via-white to-indigo-50/20 dark:border-gray-800/60 dark:from-gray-900/40 dark:via-gray-950/60 dark:to-gray-900/40 p-6 md:p-8">
                         <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(42,133,255,0.06),transparent_35%),radial-gradient(circle_at_bottom_left,rgba(99,102,241,0.04),transparent_30%)]" />
                         <div className="relative flex flex-col gap-6 md:flex-row md:items-start md:justify-between z-10">
                             <div className="space-y-4.5">
