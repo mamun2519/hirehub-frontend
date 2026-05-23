@@ -13,6 +13,7 @@ import dynamic from 'next/dynamic'
 import type { ApexOptions } from 'apexcharts'
 import type { Direction } from '@/@types/theme'
 import type { ReactNode, Ref } from 'react'
+import merge from 'lodash/merge'
 
 const notDonut = ['line', 'bar', 'area']
 
@@ -114,7 +115,7 @@ const Chart = (props: ChartProps) => {
     }
 
     if (customOptions) {
-        options = { ...options, ...customOptions }
+        options = merge({}, options, customOptions)
     }
 
     if (type === 'donut') {

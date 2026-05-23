@@ -2,14 +2,6 @@ import { RECRUITER } from '@/constants/roles.constant'
 import type { Routes } from '@/@types/routes'
 
 const recruiterRoute: Routes = {
-    '/portal/jobs': {
-        key: 'recruiter.jobs',
-        authority: [RECRUITER],
-        meta: {
-            pageBackgroundType: 'plain',
-            pageContainerType: 'contained',
-        },
-    },
     '/portal/jobs/new': {
         key: 'recruiter.jobs.new',
         authority: [RECRUITER],

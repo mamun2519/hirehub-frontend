@@ -4,6 +4,7 @@ import recruiterRoute from './recruiterRoute'
 import candidateRoute from './candidateRoute'
 import publicRoute from './publicRoute'
 import type { Routes } from '@/@types/routes'
+import { ADMIN, RECRUITER } from '@/constants/roles.constant'
 
 export const publicRoutes = publicRoute
 export const authRoutes = authRoute
@@ -28,6 +29,14 @@ export const protectedRoutes: Routes = {
     '/portal/profile': {
         key: 'portal.profile',
         authority: [],
+        meta: {
+            pageBackgroundType: 'plain',
+            pageContainerType: 'contained',
+        },
+    },
+    '/portal/jobs': {
+        key: 'recruiter.jobs',
+        authority: [RECRUITER, ADMIN],
         meta: {
             pageBackgroundType: 'plain',
             pageContainerType: 'contained',

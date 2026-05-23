@@ -21,6 +21,7 @@ interface Props {
     onPaginationChange: (page: number) => void
     onPageSizeChange: (size: number) => void
     onDeleteClick: (job: JobType) => void
+    role?: string
 }
 
 export default function JobsTable({
@@ -32,6 +33,7 @@ export default function JobsTable({
     onPaginationChange,
     onPageSizeChange,
     onDeleteClick,
+    role,
 }: Props) {
     const columns = useMemo<ColumnDef<JobType>[]>(
         () => [
@@ -151,30 +153,34 @@ export default function JobsTable({
                                 </Button>
                             </Link>
 
-                            <Link href={`/portal/jobs/edit/${row.id}`}>
-                                <Button
-                                    size="sm"
-                                    className="p-1.5 h-8 w-8 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
-                                    title="Edit Job"
-                                >
-                                    <PiPencilSimpleBold className="text-gray-500 hover:text-indigo-600 text-sm" />
-                                </Button>
-                            </Link>
+                            {role !== 'admin' && (
+                                <>
+                                    <Link href={`/portal/jobs/edit/${row.id}`}>
+                                        <Button
+                                            size="sm"
+                                            className="p-1.5 h-8 w-8 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-gray-800"
+                                            title="Edit Job"
+                                        >
+                                            <PiPencilSimpleBold className="text-gray-500 hover:text-indigo-600 text-sm" />
+                                        </Button>
+                                    </Link>
 
-                            <Button
-                                size="sm"
-                                className="p-1.5 h-8 w-8 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-rose-950/20"
-                                onClick={() => onDeleteClick(row)}
-                                title="Delete Job"
-                            >
-                                <PiTrashBold className="text-gray-500 hover:text-rose-600 text-sm" />
-                            </Button>
+                                    <Button
+                                        size="sm"
+                                        className="p-1.5 h-8 w-8 rounded-lg flex items-center justify-center border border-gray-200 dark:border-gray-800 hover:bg-gray-50 dark:hover:bg-rose-950/20"
+                                        onClick={() => onDeleteClick(row)}
+                                        title="Delete Job"
+                                    >
+                                        <PiTrashBold className="text-gray-500 hover:text-rose-600 text-sm" />
+                                    </Button>
+                                </>
+                            )}
                         </div>
                     )
                 },
             },
         ],
-        [onDeleteClick],
+        [onDeleteClick, role],
     )
 
     return (

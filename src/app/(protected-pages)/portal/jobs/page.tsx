@@ -8,6 +8,8 @@ import { PiBuildingsBold } from 'react-icons/pi'
 import ApiService from '@/services/ApiService'
 import { apiGetJobs, apiDeleteJob } from '@/services/JobService'
 import dayjs from 'dayjs'
+import useCurrentSession from '@/utils/hooks/useCurrentSession'
+import { ADMIN } from '@/constants/roles.constant'
 
 // ─── Components ───────────────────────────────────────────────────────────────
 import JobsHeroBanner from './_components/JobsHeroBanner'
@@ -29,6 +31,9 @@ import {
 
 // ─────────────────────────────────────────────────────────────────────────────
 export default function ManageJobsPage() {
+    const { session } = useCurrentSession()
+    const role = session?.user?.authority?.[0] || 'candidate'
+
     // ── Core state ────────────────────────────────────────────────────────────
     const [loading, setLoading] = useState(true)
     const [jobs, setJobs] = useState<JobType[]>([])
@@ -51,10 +56,13 @@ export default function ManageJobsPage() {
 
     // ── Fetch: server-side filtered jobs ──────────────────────────────────────
     const fetchJobs = useCallback(
-        async (rId: string, currentFilters: Filters) => {
+        async (rId: string | null, currentFilters: Filters) => {
             setTableLoading(true)
             try {
-                const params: Record<string, any> = { recruiterId: rId }
+                const params: Record<string, any> = {}
+                if (rId) {
+                    params.recruiterId = rId
+                }
 
                 if (currentFilters.searchText.trim())
                     params.searchTerm = currentFilters.searchText.trim()
@@ -88,17 +96,21 @@ export default function ManageJobsPage() {
         setError('')
         setNoProfile(false)
         try {
-            const profileRes = await ApiService.triggerApiSync<any>({
-                url: '/profile',
-                method: 'get',
-            })
-
-            if (profileRes?.data?.id) {
-                const rId = profileRes.data.id
-                setRecruiterId(rId)
-                await fetchJobs(rId, EMPTY_FILTERS)
+            if (role === ADMIN) {
+                await fetchJobs(null, EMPTY_FILTERS)
             } else {
-                setNoProfile(true)
+                const profileRes = await ApiService.triggerApiSync<any>({
+                    url: '/profile',
+                    method: 'get',
+                })
+
+                if (profileRes?.data?.id) {
+                    const rId = profileRes.data.id
+                    setRecruiterId(rId)
+                    await fetchJobs(rId, EMPTY_FILTERS)
+                } else {
+                    setNoProfile(true)
+                }
             }
         } catch (err) {
             console.error('Failed to load profile/jobs:', err)
@@ -108,24 +120,29 @@ export default function ManageJobsPage() {
         } finally {
             setLoading(false)
         }
-    }, [fetchJobs])
+    }, [fetchJobs, role])
 
     useEffect(() => {
-        loadRecruiterAndJobs()
-    }, [loadRecruiterAndJobs])
+        if (session) {
+            loadRecruiterAndJobs()
+        }
+    }, [loadRecruiterAndJobs, session])
 
     // ── Debounced refetch on filter change ────────────────────────────────────
     const triggerDebouncedFetch = useCallback(
         (next: Filters) => {
             if (debounceTimer.current) clearTimeout(debounceTimer.current)
             debounceTimer.current = setTimeout(() => {
-                if (recruiterId) {
+                if (role === ADMIN) {
+                    setPageIndex(1)
+                    fetchJobs(null, next)
+                } else if (recruiterId) {
                     setPageIndex(1)
                     fetchJobs(recruiterId, next)
                 }
             }, 450)
         },
-        [recruiterId, fetchJobs],
+        [recruiterId, role, fetchJobs],
     )
 
     // ── Filter handlers ───────────────────────────────────────────────────────
@@ -141,7 +158,11 @@ export default function ManageJobsPage() {
     const handleClearFilters = () => {
         setFilters(EMPTY_FILTERS)
         setPageIndex(1)
-        if (recruiterId) fetchJobs(recruiterId, EMPTY_FILTERS)
+        if (role === ADMIN) {
+            fetchJobs(null, EMPTY_FILTERS)
+        } else if (recruiterId) {
+            fetchJobs(recruiterId, EMPTY_FILTERS)
+        }
     }
 
     // ── Delete handlers ───────────────────────────────────────────────────────
@@ -161,7 +182,11 @@ export default function ManageJobsPage() {
                     successfully removed.
                 </Notification>,
             )
-            if (recruiterId) await fetchJobs(recruiterId, filters)
+            if (role === ADMIN) {
+                await fetchJobs(null, filters)
+            } else if (recruiterId) {
+                await fetchJobs(recruiterId, filters)
+            }
         } catch {
             toast.push(
                 <Notification title="Action Failed" type="danger">
@@ -250,7 +275,7 @@ export default function ManageJobsPage() {
     // ── Main layout ───────────────────────────────────────────────────────────
     return (
         <div className="flex flex-col gap-6 p-4 md:p-6 max-w-7xl mx-auto">
-            <JobsHeroBanner />
+            <JobsHeroBanner role={role} />
 
             {error && (
                 <Alert
@@ -301,6 +326,7 @@ export default function ManageJobsPage() {
                             setPageIndex(1)
                         }}
                         onDeleteClick={handleDeleteClick}
+                        role={role}
                     />
                 </div>
             </Card>

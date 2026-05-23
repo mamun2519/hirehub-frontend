@@ -1,5 +1,12 @@
 import ApiService from './ApiService'
 
+export async function apiGetDashboardStats<T = any>() {
+    return ApiService.triggerApiSync<T>({
+        url: '/dashboard',
+        method: 'get',
+    })
+}
+
 export async function apiGetNotificationCount() {
     return ApiService.triggerApiSync<{
         count: number
