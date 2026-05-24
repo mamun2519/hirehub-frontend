@@ -6,7 +6,11 @@ export type AppConfig = {
 }
 
 const appConfig: AppConfig = {
-    serverBaseUrl: 'http://localhost:5000',
+    serverBaseUrl:
+        process.env.NEXT_PUBLIC_SERVER_BASE_URL ||
+        (process.env.NODE_ENV === 'production'
+            ? 'https://hirehub-server.dreamersdesire.com'
+            : 'http://localhost:5000'),
     apiPrefix: '/api/v1',
     authenticatedEntryPath: '/portal',
     unAuthenticatedEntryPath: '/sign-in',
