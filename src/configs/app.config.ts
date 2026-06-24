@@ -9,7 +9,7 @@ const appConfig: AppConfig = {
     serverBaseUrl:
         process.env.NEXT_PUBLIC_SERVER_BASE_URL ||
         (process.env.NODE_ENV === 'production'
-            ? 'https://hirehub-server.dreamersdesire.com'
+            ? 'https://hirehub-three.vercel.app'
             : 'http://localhost:5000'),
     apiPrefix: '/api/v1',
     authenticatedEntryPath: '/portal',
