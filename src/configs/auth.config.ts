@@ -36,6 +36,17 @@ export default {
         }),
     ],
     callbacks: {
+        async redirect({ url }) {
+            try {
+                const parsedUrl = new URL(url)
+                return parsedUrl.pathname + parsedUrl.search + parsedUrl.hash
+            } catch {
+                if (url.startsWith('/')) {
+                    return url
+                }
+            }
+            return '/portal'
+        },
         async jwt({ token, user }) {
             // Persist the authority and accessToken to the token right after signin
             if (user) {
