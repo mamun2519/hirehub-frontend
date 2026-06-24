@@ -24,7 +24,7 @@ const PasswordInput = (props: PasswordInputProps) => {
         <Input
             {...rest}
             ref={ref}
-            type={pwInputType}
+            type="password"
             suffix={
                 <span
                     className="cursor-pointer select-none text-xl"

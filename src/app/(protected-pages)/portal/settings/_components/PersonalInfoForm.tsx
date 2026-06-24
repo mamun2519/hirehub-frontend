@@ -175,7 +175,7 @@ export default function PersonalInfoForm({
                     <h3 className="text-lg font-bold text-transparent selection:bg-indigo-500 selection:text-white">
                         Personal Information
                     </h3>
-                    <p className="text-xs text-gray-400 mt-1">
+                    <p className="text-xs text-gray-900 dark:text-neutral-950 mt-1">
                         Update your account's primary profile photo, full name,
                         and email details.
                     </p>
@@ -185,7 +185,7 @@ export default function PersonalInfoForm({
                     <div className="flex flex-col md:flex-row gap-8 items-start">
                         {/* Avatar Upload Container */}
                         <div className="flex flex-col items-center gap-3 w-full md:w-auto">
-                            <label className="text-sm font-semibold text-gray-700 dark:text-gray-300">
+                            <label className="text-sm font-semibold text-gray-700 dark:text-neutral-950">
                                 Profile Picture
                             </label>
 

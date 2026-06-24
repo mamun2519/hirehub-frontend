@@ -467,7 +467,7 @@ export default function ApplicationStatusDialog({
                             </p>
                         </div>
                         <div className="px-4 py-4">
-                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-line">
+                            <p className="text-sm text-gray-700 dark:text-gray-300 leading-relaxed whitespace-nowrap overflow-visible">
                                 {application.coverLetter}
                             </p>
                         </div>

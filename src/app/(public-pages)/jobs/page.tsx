@@ -168,16 +168,13 @@ export default function PublicJobsPage() {
                     Array.isArray(responseData?.data) ? responseData.data : [],
                 )
                 setTotalJobs(responseData?.meta?.total ?? 0)
+                setLoading(false)
             } catch (err) {
                 if (!controller.signal.aborted) {
                     console.error('Failed to load public jobs:', err)
                     setError('We could not load the public job feed right now.')
                     setJobs([])
                     setTotalJobs(0)
-                }
-            } finally {
-                if (!controller.signal.aborted) {
-                    setLoading(false)
                 }
             }
         }, 300)

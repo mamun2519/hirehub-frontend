@@ -21,14 +21,9 @@ export default function JobCardGrid({
 }: Props) {
     if (jobs.length === 0) {
         return (
-            <Card className="border border-dashed border-gray-200 bg-white p-10 text-center dark:border-gray-800 dark:bg-gray-950">
-                <h3 className="text-lg font-bold text-gray-950 dark:text-white">
-                    No jobs found
-                </h3>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                    Try clearing a filter or searching with a different keyword.
-                </p>
-            </Card>
+            <div className="text-xs font-mono text-gray-400 p-4">
+                []
+            </div>
         )
     }
 
