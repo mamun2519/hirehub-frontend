@@ -42,10 +42,7 @@ const _UserDropdown = () => {
         : [dashboardItem, ...portalDropdownItemList]
 
     const handleSignOut = async () => {
-        const response = await signOut()
-        if (response?.success) {
-            window.location.href = appConfig.unAuthenticatedEntryPath
-        }
+        await signOut()
     }
 
     const displayAvatarSrc = session?.user?.avatar

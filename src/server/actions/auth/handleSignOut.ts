@@ -6,25 +6,12 @@ import { redirect } from 'next/navigation'
 import { cookies } from 'next/headers'
 
 const handleSignOut = async () => {
-    try {
-        await signOut({ redirect: false })
-    } catch (error) {
-        // Catch any redirect/error thrown by NextAuth to override it
-    }
-
-    // Explicitly delete all auth and token cookies
+    // Explicitly delete custom accessToken cookie
     const cookieStore = await cookies()
     cookieStore.delete('accessToken')
-    cookieStore.delete('authjs.session-token')
-    cookieStore.delete('__Secure-authjs.session-token')
-    cookieStore.delete('next-auth.session-token')
-    cookieStore.delete('__Secure-next-auth.session-token')
-    cookieStore.delete('authjs.callback-url')
-    cookieStore.delete('__Secure-authjs.callback-url')
-    cookieStore.delete('authjs.csrf-token')
-    cookieStore.delete('__Secure-authjs.csrf-token')
 
-    return { success: true }
+    // Perform NextAuth sign out and redirect to sign-in page
+    await signOut({ redirectTo: '/sign-in' })
 }
 
 export default handleSignOut

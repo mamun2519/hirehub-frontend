@@ -7,6 +7,7 @@ import Google from 'next-auth/providers/google'
 import type { SignInCredential } from '@/@types/auth'
 
 export default {
+    trustHost: true,
     providers: [
         Github({
             clientId: process.env.GITHUB_AUTH_CLIENT_ID,

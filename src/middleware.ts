@@ -15,6 +15,12 @@ const apiAuthPrefix = `${appConfig.apiPrefix}/auth`
 export default auth((req) => {
     const { nextUrl } = req
     const isSignedIn = !!req.auth?.user
+    console.log('Middleware Auth Check:', {
+        pathname: nextUrl.pathname,
+        isSignedIn,
+        auth: req.auth,
+        cookies: req.cookies.getAll().map(c => c.name),
+    })
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
     const isPublicRoute = isPublicPath(nextUrl.pathname)
