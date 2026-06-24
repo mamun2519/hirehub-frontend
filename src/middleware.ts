@@ -1,16 +1,11 @@
-import NextAuth from 'next-auth'
-
-import authConfig from '@/configs/auth.config'
+import { auth } from '@/auth'
 import {
     authRoutes as _authRoutes,
     publicRoutes as _publicRoutes,
-    protectedRoutes,
 } from '@/configs/routes.config'
 import { REDIRECT_URL_KEY } from '@/constants/app.constant'
 import appConfig from '@/configs/app.config'
 import { isPublicPath, matchRoute } from '@/utils/queryRoute'
-
-const { auth } = NextAuth(authConfig)
 
 const publicRoutes = Object.entries(_publicRoutes).map(([key]) => key)
 const authRoutes = Object.entries(_authRoutes).map(([key]) => key)
