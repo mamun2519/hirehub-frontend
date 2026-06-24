@@ -19,7 +19,7 @@ const apiAuthPrefix = `${appConfig.apiPrefix}/auth`
 
 export default auth((req) => {
     const { nextUrl } = req
-    const isSignedIn = !!req.auth
+    const isSignedIn = !!req.auth?.user
 
     const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix)
     const isPublicRoute = isPublicPath(nextUrl.pathname)
