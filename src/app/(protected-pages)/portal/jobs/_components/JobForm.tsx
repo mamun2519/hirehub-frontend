@@ -34,7 +34,7 @@ const validationSchema = z.object({
     employmentType: z.string().min(1, { message: 'Employment type is required' }),
     experienceLevel: z.string().min(1, { message: 'Experience level is required' }),
     remoteInfo: z.string().min(1, { message: 'Remote setting is required' }),
-    vacancyCount: z.coerce.number().int().positive({ message: 'Vacancy count must be a positive integer' }),
+    vacancyCount: z.coerce.number().int({ message: 'Vacancy count must be an integer' }),
     applicationDeadline: z
         .any()
         .refine(
@@ -229,7 +229,6 @@ export default function JobForm({
                                         <Input
                                             {...field}
                                             type="number"
-                                            min={1}
                                             placeholder="1"
                                             className="h-10 bg-gray-50/50 dark:bg-gray-900/50 border border-gray-200 dark:border-gray-800 rounded-lg text-sm focus:bg-white"
                                         />

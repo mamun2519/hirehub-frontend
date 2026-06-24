@@ -253,7 +253,7 @@ export default function AdminPortal({ user }: AdminPortalProps) {
                                 },
                             }}
                             donutTitle="Total Users"
-                            donutText={String(kpi.totalUsers)}
+                            donutText={String(donutSeries.reduce((a, b) => a + b, 0))}
                             height={260}
                         />
                         <div className="grid grid-cols-3 gap-4 w-full px-4 mt-6 text-center">
