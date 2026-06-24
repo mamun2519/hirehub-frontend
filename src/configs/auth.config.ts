@@ -36,16 +36,22 @@ export default {
         }),
     ],
     callbacks: {
-        async redirect({ url }) {
+        async redirect({ url, baseUrl }) {
+            let currentBaseUrl = baseUrl
+            if (process.env.VERCEL_URL) {
+                currentBaseUrl = `https://${process.env.VERCEL_URL}`
+            }
+
             try {
                 const parsedUrl = new URL(url)
-                return parsedUrl.pathname + parsedUrl.search + parsedUrl.hash
+                const parsedBase = new URL(currentBaseUrl)
+                return `${parsedBase.origin}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
             } catch {
                 if (url.startsWith('/')) {
-                    return url
+                    return `${currentBaseUrl}${url}`
                 }
             }
-            return '/portal'
+            return currentBaseUrl
         },
         async jwt({ token, user }) {
             // Persist the authority and accessToken to the token right after signin
