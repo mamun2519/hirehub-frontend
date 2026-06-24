@@ -31,8 +31,8 @@ const validationSchema = z.object({
     fullName: z.string().trim().min(1, { message: 'Full name is required' }),
     email: z.email({ message: 'Please enter a valid email' }),
     phone: z.string().trim().min(1, { message: 'Phone number is required' }),
-    coverLetter: z.string().max(20, {
-        message: 'Cover letter must be 20 characters or fewer',
+    coverLetter: z.string().max(2000, {
+        message: 'Cover letter must be 2000 characters or fewer',
     }).optional().or(z.literal('')),
     linkedInUrl: z.string().url({ message: 'Please enter a valid LinkedIn URL' }).optional().or(z.literal('')),
     resume: z
@@ -41,7 +41,9 @@ const validationSchema = z.object({
         })
         .refine((file) => file.size <= MAX_RESUME_SIZE, {
             message: 'Resume must be 5 MB or smaller',
-        }),
+        })
+        .optional()
+        .nullable(),
 })
 
 export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
@@ -243,7 +245,7 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
                     </FormItem>
 
                     <FormItem
-                        label="Resume"
+                        label="Resume (Optional)"
                         invalid={Boolean(errors.resume)}
                         errorMessage={errors.resume?.message as string | undefined}
                         extra="PDF, DOC, or DOCX up to 5 MB"
