@@ -37,13 +37,29 @@ export default {
     ],
     callbacks: {
         async redirect({ url, baseUrl }) {
-            if (url.startsWith("/")) return `${baseUrl}${url}`
+            let currentBaseUrl = baseUrl
+            if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
+                currentBaseUrl = `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+            } else if (process.env.VERCEL_URL) {
+                currentBaseUrl = `https://${process.env.VERCEL_URL}`
+            }
+
             try {
-                if (new URL(url).origin === new URL(baseUrl).origin) {
-                    return url
+                const parsedUrl = new URL(url)
+                const parsedBase = new URL(currentBaseUrl)
+                if (
+                    parsedUrl.origin === parsedBase.origin ||
+                    parsedUrl.origin.includes('localhost') ||
+                    parsedUrl.origin.includes('vercel.app')
+                ) {
+                    return `${parsedBase.origin}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
                 }
-            } catch {}
-            return baseUrl
+            } catch {
+                if (url.startsWith('/')) {
+                    return `${currentBaseUrl}${url}`
+                }
+            }
+            return currentBaseUrl
         },
         async jwt({ token, user }) {
             // Persist the authority and accessToken to the token right after signin
