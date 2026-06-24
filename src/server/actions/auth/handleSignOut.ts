@@ -17,12 +17,14 @@ const handleSignOut = async () => {
     cookieStore.delete('accessToken')
     cookieStore.delete('authjs.session-token')
     cookieStore.delete('__Secure-authjs.session-token')
+    cookieStore.delete('next-auth.session-token')
+    cookieStore.delete('__Secure-next-auth.session-token')
     cookieStore.delete('authjs.callback-url')
     cookieStore.delete('__Secure-authjs.callback-url')
     cookieStore.delete('authjs.csrf-token')
     cookieStore.delete('__Secure-authjs.csrf-token')
 
-    redirect(appConfig.unAuthenticatedEntryPath)
+    return { success: true }
 }
 
 export default handleSignOut
