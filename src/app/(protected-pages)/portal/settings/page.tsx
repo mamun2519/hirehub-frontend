@@ -179,7 +179,7 @@ export default function SettingsPage() {
                                 className="flex items-center gap-2 py-3 px-1 text-sm font-semibold border-b-2 whitespace-nowrap"
                             >
                                 <PiShieldCheckDuotone className="text-lg" />
-                                Security
+                                <span className="text-transparent selection:bg-indigo-500 selection:text-white">Security</span>
                             </TabNav>
                         </TabList>
                     </div>

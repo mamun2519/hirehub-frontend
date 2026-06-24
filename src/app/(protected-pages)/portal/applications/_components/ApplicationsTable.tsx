@@ -158,7 +158,7 @@ export default function ApplicationsTable({
     return (
         <DataTable
             columns={columns}
-            data={applications.slice((pageIndex - 1) * pageSize, pageIndex * pageSize)}
+            data={applications.slice(0, pageSize)}
             loading={loading}
             noData={applications.length === 0}
             pagingData={{ total: applications.length, pageIndex, pageSize }}

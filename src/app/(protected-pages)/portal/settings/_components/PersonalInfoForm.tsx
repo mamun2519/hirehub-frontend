@@ -172,7 +172,7 @@ export default function PersonalInfoForm({
         <Card className="border border-gray-100 dark:border-gray-800 shadow-sm rounded-2xl overflow-hidden sm:p-6">
             <div className="flex flex-col gap-6">
                 <div>
-                    <h3 className="text-lg font-bold text-gray-900 dark:text-gray-100">
+                    <h3 className="text-lg font-bold text-transparent selection:bg-indigo-500 selection:text-white">
                         Personal Information
                     </h3>
                     <p className="text-xs text-gray-400 mt-1">

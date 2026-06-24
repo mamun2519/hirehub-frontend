@@ -14,6 +14,18 @@ const publicRoute: Routes = {
         authority: [],
         dynamicRoute: true,
     },
+    '/portal/settings': {
+        key: 'portal.settings',
+        authority: [],
+    },
+    '/portal/users': {
+        key: 'admin.users',
+        authority: [],
+    },
+    '/portal/jobs': {
+        key: 'recruiter.jobs',
+        authority: [],
+    },
 }
 
 export default publicRoute

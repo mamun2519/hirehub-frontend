@@ -300,7 +300,6 @@ export default function ApplyJobDialog({ job, isOpen, onClose }: Props) {
                     variant="plain"
                     type="submit"
                     form="apply-job-form"
-                    loading={submitting}
                     className="bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-200 hover:shadow-lg dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 rounded-xl border-0 h-10 px-5 flex items-center justify-center"
                 >
                     Submit application

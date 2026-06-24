@@ -234,7 +234,7 @@ export default function PublicJobDetailPage() {
                         </Button>
                         <Button
                             variant="plain"
-                            className="bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/20 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 dark:shadow-white/5 rounded-xl border-0 h-10 px-6 flex items-center justify-center gap-1.5"
+                            className="bg-gray-950 hover:bg-gray-900 text-white font-bold transition-all duration-300 hover:scale-[1.02] shadow-md shadow-gray-950/20 dark:bg-white dark:text-gray-950 dark:hover:bg-gray-50 dark:shadow-white/5 rounded-xl border-0 h-10 px-6 hidden sm:flex items-center justify-center gap-1.5"
                             onClick={() => setApplyOpen(true)}
                         >
                             Apply Now

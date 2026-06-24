@@ -39,7 +39,7 @@ export default function ApplicationsPage() {
     const [search, setSearch] = useState('')
     const [statusFilter, setStatusFilter] = useState('')
     const [pageIndex, setPageIndex] = useState(1)
-    const [pageSize] = useState(8)
+    const [pageSize] = useState(3)
 
     // Dialog state
     const [selectedApp, setSelectedApp] = useState<ApplicationResponse | null>(

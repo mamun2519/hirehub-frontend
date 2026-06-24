@@ -121,7 +121,7 @@ function DataTable<T>(props: DataTableProps<T>) {
         onPaginationChange,
         onSelectChange,
         onSort,
-        pageSizes = [10, 25, 50, 100],
+        pageSizes = [3, 5, 10, 25, 50, 100],
         selectable = false,
         skeletonAvatarProps,
         pagingData = {
@@ -187,8 +187,8 @@ function DataTable<T>(props: DataTableProps<T>) {
                             checked={
                                 indeterminateCheckboxChecked
                                     ? indeterminateCheckboxChecked(
-                                          table.getRowModel().rows,
-                                      )
+                                        table.getRowModel().rows,
+                                    )
                                     : table.getIsAllRowsSelected()
                             }
                             indeterminate={table.getIsSomeRowsSelected()}
@@ -287,9 +287,9 @@ function DataTable<T>(props: DataTableProps<T>) {
                                             <div
                                                 className={classNames(
                                                     header.column.getCanSort() &&
-                                                        'cursor-pointer select-none point',
+                                                    'cursor-pointer select-none point',
                                                     loading &&
-                                                        'pointer-events-none',
+                                                    'pointer-events-none',
                                                 )}
                                                 onClick={header.column.getToggleSortingHandler()}
                                             >
