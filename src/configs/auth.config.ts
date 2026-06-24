@@ -37,21 +37,13 @@ export default {
     ],
     callbacks: {
         async redirect({ url, baseUrl }) {
-            let currentBaseUrl = baseUrl
-            if (process.env.VERCEL_URL) {
-                currentBaseUrl = `https://${process.env.VERCEL_URL}`
-            }
-
+            if (url.startsWith("/")) return `${baseUrl}${url}`
             try {
-                const parsedUrl = new URL(url)
-                const parsedBase = new URL(currentBaseUrl)
-                return `${parsedBase.origin}${parsedUrl.pathname}${parsedUrl.search}${parsedUrl.hash}`
-            } catch {
-                if (url.startsWith('/')) {
-                    return `${currentBaseUrl}${url}`
+                if (new URL(url).origin === new URL(baseUrl).origin) {
+                    return url
                 }
-            }
-            return currentBaseUrl
+            } catch {}
+            return baseUrl
         },
         async jwt({ token, user }) {
             // Persist the authority and accessToken to the token right after signin
