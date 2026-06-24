@@ -2,14 +2,15 @@
 
 import { signOut } from '@/auth'
 import appConfig from '@/configs/app.config'
-import { headers } from 'next/headers'
+import { redirect } from 'next/navigation'
 
 const handleSignOut = async () => {
-    const headersList = await headers()
-    const host = headersList.get('host')
-    const protocol = host?.includes('localhost') ? 'http' : 'https'
-    const redirectTo = `${protocol}://${host}${appConfig.unAuthenticatedEntryPath}`
-    await signOut({ redirectTo })
+    try {
+        await signOut({ redirect: false })
+    } catch (error) {
+        // Catch any redirect/error thrown by NextAuth to override it
+    }
+    redirect(appConfig.unAuthenticatedEntryPath)
 }
 
 export default handleSignOut
